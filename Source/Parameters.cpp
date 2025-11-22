@@ -13,12 +13,12 @@ static T castProcessor(const juce::AudioProcessorValueTreeState& apvts, const ju
 }
 
 
+
 Parameters::Parameters(const juce::AudioProcessorValueTreeState& apvts) :
-    gainParam{castProcessor<juce::AudioParameterFloat*>(apvts, gainParamID)}
+    gainParam{castProcessor<juce::AudioParameterFloat*>(apvts, gainParamID)},
+delayTimeParam{castProcessor<juce::AudioParameterFloat*>(apvts,delayTimeParamID)}
 {
 }
-
-
 
 juce::AudioProcessorValueTreeState::ParameterLayout Parameters::createParameterLayout()
 {
@@ -27,6 +27,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout Parameters::createParameterL
                                                            "Output Gain",
                                                            juce::NormalisableRange<float>{-12.0f, 12.0f},
                                                            0.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(delayTimeParamID, "Delay Time",
+                                                           juce::NormalisableRange<float>{minDelayTime,maxDelayTime,0.001f,0.33f},
+                                                           100.0f));
     return layout;
 }
 
@@ -34,17 +37,23 @@ juce::AudioProcessorValueTreeState::ParameterLayout Parameters::createParameterL
 void Parameters::update() noexcept
 {
     gainSmoother.setTargetValue(juce::Decibels::decibelsToGain(gainParam->get()));
+    delayTime = delayTimeParam->get();
 }
 
 void Parameters::prepareToPlay(double sampleRate) noexcept
 {
-    double duration {0.02};
-    gainSmoother.reset(sampleRate,duration);
+    double duration{0.02};
+    gainSmoother.reset(sampleRate, duration);
 }
 
 void Parameters::reset() noexcept
 {
     gain = 0.0f;
     gainSmoother.setCurrentAndTargetValue(juce::Decibels::decibelsToGain(gainParam->get()));
+    delayTime = 0.0f;
+}
 
+void Parameters::smoothen() noexcept
+{
+    gain = gainSmoother.getNextValue();
 }

@@ -3,7 +3,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 
 #include "Parameters.h"
-
+#include "juce_dsp/juce_dsp.h"
 
 //==============================================================================
 class DelayAudioProcessor final : public juce::AudioProcessor
@@ -44,6 +44,7 @@ public:
     //==============================================================================
     void getStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation(const void* data, int sizeInBytes) override;
+    //==============================================================================
 
 private:
     //==============================================================================
@@ -56,4 +57,5 @@ private:
         Parameters::createParameterLayout()
     };
     Parameters params;
+    juce::dsp::DelayLine<float,juce::dsp::DelayLineInterpolationTypes::Linear> delayLine{};
 };
