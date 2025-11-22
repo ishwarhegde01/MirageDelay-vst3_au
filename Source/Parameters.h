@@ -23,11 +23,13 @@ public:
     float gain{};
     static constexpr float minDelayTime{5.0f};
     static constexpr float maxDelayTime{5000.0f};
-    float delayTime{0.0f};
+    float delayTime{};
 private:
     juce::AudioParameterFloat* gainParam{};
     juce::LinearSmoothedValue<float> gainSmoother{};
     juce::AudioParameterFloat* delayTimeParam{};
+    float targetDelayTime{};
+    float coeff{}; // for one pole smoothing
 };
 
 
