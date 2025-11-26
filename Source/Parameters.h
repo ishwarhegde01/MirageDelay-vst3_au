@@ -28,6 +28,7 @@ public:
     float delayTime{};
     float mix{1.0f};
 private:
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Parameters)
     juce::AudioParameterFloat* gainParam{};
     juce::LinearSmoothedValue<float> gainSmoother{};
     juce::AudioParameterFloat* delayTimeParam{};
