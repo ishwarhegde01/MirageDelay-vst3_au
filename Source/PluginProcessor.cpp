@@ -181,7 +181,7 @@ bool DelayAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* DelayAudioProcessor::createEditor()
 {
-    return new AudioPluginAudioProcessorEditor(*this);
+    return new delayAudioProcessorEditor(*this);
 }
 
 //==============================================================================

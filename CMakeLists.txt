@@ -36,6 +36,7 @@ set(SourceFiles
         Source/PluginProcessor.h
         Source/parameters.cpp
         Source/parameters.h
+        Source/CustomSlider.h
 )
 
 # Change these to your own preferences

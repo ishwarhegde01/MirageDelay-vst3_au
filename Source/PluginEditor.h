@@ -1,16 +1,18 @@
 #pragma once
 
 #include "PluginProcessor.h"
+#include "Parameters.h"
+
 
 //==============================================================================
-class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
+class delayAudioProcessorEditor final : public juce::AudioProcessorEditor
 {
 public:
-    explicit AudioPluginAudioProcessorEditor (DelayAudioProcessor&);
-    ~AudioPluginAudioProcessorEditor() override;
+    explicit delayAudioProcessorEditor(DelayAudioProcessor& p);
+    ~delayAudioProcessorEditor() override;
 
     //==============================================================================
-    void paint (juce::Graphics&) override;
+    void paint(juce::Graphics&) override;
     void resized() override;
 
 private:
@@ -18,5 +20,10 @@ private:
     // access the processor object that created it.
     DelayAudioProcessor& audioProcessor;
     juce::Slider slider;
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
+
+    juce::Label label;
+    juce::AudioProcessorValueTreeState::SliderAttachment attachment{
+        audioProcessor.apvts, gainParamID.getParamID(), slider
+    };
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(delayAudioProcessorEditor)
 };
