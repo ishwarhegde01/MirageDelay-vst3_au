@@ -10,22 +10,16 @@ struct superSlider:public juce::Slider
     using Mouse = juce::MouseEvent;
     using Wheel = juce::MouseWheelDetails;
     static constexpr float normalWheel = .7f;
-    static constexpr float sensitiveWheel = 0.5f;
+    static constexpr float sensitiveWheel = 0.1f;
 
     void mouseWheelMove(const juce::MouseEvent& event, const juce::MouseWheelDetails& wheel) override
     {
-        // Strip out Alt modifier to prevent JUCE's default fine control
-        auto modifiedEvent = event.withNewModifiers(
-            event.mods.withoutFlags(juce::ModifierKeys::altModifier)
-        );
-
-        // Apply our own speed multiplier
         auto newWheel = wheel;
-        const auto speed = event.mods.isShiftDown() ? sensitiveWheel : normalWheel;
-        newWheel.deltaY *= speed;
+        const auto speed = event.mods.isShiftDown() ? sensitiveWheel:normalWheel;
+        newWheel.deltaX *= speed;
 
-        // Pass modified event and wheel to base class
-        Slider::mouseWheelMove(modifiedEvent, newWheel);
+        Slider::mouseWheelMove(event, newWheel);
+
     }
 };
 
