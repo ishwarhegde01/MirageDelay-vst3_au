@@ -2,21 +2,30 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 
 
-class CSlider: public juce::Component
+struct superSlider:public juce::Slider
 {
-public:
-    static constexpr float  scrollInterval{0.05f};
-    static constexpr float scrollIntervalSensitive{0.01f};
-    static constexpr float sensitiveSpeed{1.0f/16.0f};
-    CSlider(juce::AudioProcessorValueTreeState& apvts, juce::String id):
-    otherSlider{nullptr},
-    paramText{nullptr},
-    param{apvts.getParameter(id)},
+    using Slider = juce::Slider;
+    using Style = Slider::SliderStyle;
+    using BoxPos = Slider::TextEntryBoxPosition;
+    using Mouse = juce::MouseEvent;
+    using Wheel = juce::MouseWheelDetails;
+    static constexpr float normalWheel = .7f;
+    static constexpr float sensitiveWheel = 0.5f;
 
+    void mouseWheelMove(const juce::MouseEvent& event, const juce::MouseWheelDetails& wheel) override
     {
-    }
-    CSlider* otherSlider{};
-    juce::RangedAudioParameter* param{};
+        // Strip out Alt modifier to prevent JUCE's default fine control
+        auto modifiedEvent = event.withNewModifiers(
+            event.mods.withoutFlags(juce::ModifierKeys::altModifier)
+        );
 
+        // Apply our own speed multiplier
+        auto newWheel = wheel;
+        const auto speed = event.mods.isShiftDown() ? sensitiveWheel : normalWheel;
+        newWheel.deltaY *= speed;
+
+        // Pass modified event and wheel to base class
+        Slider::mouseWheelMove(modifiedEvent, newWheel);
+    }
 };
 

@@ -2,7 +2,7 @@
 
 #include "PluginProcessor.h"
 #include "Parameters.h"
-
+#include "CustomSlider.h"
 
 //==============================================================================
 class delayAudioProcessorEditor final : public juce::AudioProcessorEditor
@@ -19,7 +19,7 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     DelayAudioProcessor& audioProcessor;
-    juce::Slider slider;
+    superSlider slider;
 
     juce::Label label;
     juce::AudioProcessorValueTreeState::SliderAttachment attachment{
